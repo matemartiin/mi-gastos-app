@@ -108,9 +108,15 @@
 <div id="popup-gasto" class="popup-overlay">
   <div class="popup">
     <h2>Nuevo Gasto</h2>
-    <input type="text" id="popup-desc" placeholder="Descripción del gasto">
-    <input type="number" id="popup-monto" placeholder="Monto">
+    <label for="popup-desc" style="display:none;">Descripción</label>
+    <input type="text" id="popup-desc" placeholder="Descripción del gasto" required>
+
+    <label for="popup-monto" style="display:none;">Monto</label>
+    <input type="number" id="popup-monto" placeholder="Monto" required>
+
+    <label for="popup-cuotas" style="display:none;">Cuotas</label>
     <input type="number" id="popup-cuotas" placeholder="Cuotas (opcional)" min="1" />
+
     <button id="popup-agregar">Agregar</button>
     <button id="cerrar-popup" class="btn-cerrar">Cancelar</button>
   </div>
