@@ -330,20 +330,23 @@ li.style.borderLeft = `6px solid ${estilo.color}`;
     const valores = Object.values(porCategoria);
 
     if (chart) chart.destroy();
-    chart = new Chart(document.getElementById("pieChart"), {
-      type: "pie",
-      data: {
-        labels,
-        datasets: [{
-          data: valores,
-          backgroundColor: ["#f48fb1", "#aed581", "#81d4fa", "#ffe0b2", "#ce93d8", "#ffab91", "#90caf9"],
-        }]
-      },
-      options: {
-  plugins: {
-    legend: {
-      labels: { color: "#fff", font: { size: 14 } }
-    },
+    <PieChart width={220} height={220}>
+  <Pie
+    data={datosGrafico}
+    dataKey="value"
+    nameKey="name"
+    cx="50%"
+    cy="50%"
+    outerRadius={80}
+    label
+  >
+    {datosGrafico.map((entry, idx) => (
+      <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
+    ))}
+  </Pie>
+  <Tooltip />
+  <Legend />
+</PieChart>
     tooltip: {
       callbacks: {
         label: function(context) {
