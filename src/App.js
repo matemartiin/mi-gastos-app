@@ -329,24 +329,6 @@ li.style.borderLeft = `6px solid ${estilo.color}`;
     const labels = Object.keys(porCategoria);
     const valores = Object.values(porCategoria);
 
-    if (chart) chart.destroy();
-    <PieChart width={220} height={220}>
-  <Pie
-    data={datosGrafico}
-    dataKey="value"
-    nameKey="name"
-    cx="50%"
-    cy="50%"
-    outerRadius={80}
-    label
-  >
-    {datosGrafico.map((entry, idx) => (
-      <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
-    ))}
-  </Pie>
-  <Tooltip />
-  <Legend />
-</PieChart>
     tooltip: {
       callbacks: {
         label: function(context) {
