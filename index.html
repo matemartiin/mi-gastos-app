@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FINZN</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="header-degrade">
+    <div class="selector-mes">
+      <label for="mes-selector">Mes:</label>
+      <select id="mes-selector"></select>
+    </div>
+    <div class="titulo-izquierda">
+      <div class="logo">FINZN</div>
+      <div class="saldo-box">
+        <h2>Dinero disponible</h2>
+        <span id="balance-neto">$0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="flex-wrapper">
+      <div class="section">
+        <h2>Ingreso Fijo Mensual</h2>
+        <form id="fijo-form">
+          <input type="number" id="fijo-input" placeholder="Sueldo mensual" />
+          <button type="submit">Guardar Sueldo</button>
+        </form>
+      </div>
+
+      <div class="section">
+        <h2>Agregar Gasto</h2>
+        <form id="expense-form">
+          <input type="text" id="description" placeholder="Descripción" required />
+          <input type="number" id="amount" placeholder="Monto" required />
+          <select id="category" required>
+            <option value="" disabled selected>Seleccionar categoría</option>
+            <option value="Comida">Comida</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Salud">Salud</option>
+            <option value="Ocio">Ocio</option>
+            <option value="Otros">Otros</option>
+          </select>
+          <input type="number" id="cuotas" placeholder="Cuotas (opcional)" min="1" />
+          <button type="submit">Agregar</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Lista de Gastos</h2>
+      <ul id="expense-list"></ul>
+    </div>
+
+    <div class="section">
+      <h2>Cuotas Activas</h2>
+      <ul id="cuotas-activas-list"></ul>
+    </div>
+
+    <div class="section grafico-section">
+      <h2>Distribución por Categoría</h2>
+      <canvas id="pieChart" width="400" height="400"></canvas>
+    </div>
+
+    <div class="ahorro-section">
+      <h2>Ahorros Acumulados</h2>
+      <ul id="ahorro-list"></ul>
+      <div class="ahorro-total-container">Total acumulado: $<span id="ahorro-total">0</span></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
