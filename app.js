@@ -174,6 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("ahorro-total").textContent = total.toLocaleString("es-AR", { minimumFractionDigits: 2 });
   }
 
+  //hola
   function renderCuotasActivas() {
     const lista = document.getElementById("cuotas-activas-list");
     lista.innerHTML = "";
