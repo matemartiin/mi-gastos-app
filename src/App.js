@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Variables globales de datos
   const gastosPorMes = {};
   const ingresosFijos = {};
   const ingresosExtras = {};
   const ahorros = {};
   const cuotasPendientes = {};
+
+  // Guardar y cargar datos desde localStorage
   function guardarDatos() {
     const data = {
       ingresosFijos,
@@ -25,11 +28,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function obtenerMesActual() {
+    const fecha = new Date();
+    return `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, "0")}`;
+  }
+
+  function avanzarMes(mesStr, cantidad) {
+    const [año, mes] = mesStr.split("-").map(Number);
+    const fecha = new Date(año, mes - 1 + cantidad, 1);
+    return `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, "0")}`;
+  }
+
   cargarDatos();
 
   let mesActual = obtenerMesActual();
-  let chart;
+  let miChart = null;
 
+  // --------- GASTO: AGREGAR ----------
   document.getElementById("popup-agregar").addEventListener("click", () => {
     const desc = document.getElementById("popup-desc").value.trim();
     const monto = parseFloat(document.getElementById("popup-monto").value);
@@ -57,7 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Limpiar y cerrar
     document.getElementById("popup-desc").value = "";
     document.getElementById("popup-monto").value = "";
     document.getElementById("popup-cuotas").value = "";
@@ -67,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
     guardarDatos();
   });
 
+  // --------- INFORME / RECOMENDACIONES ----------
   document.getElementById("btn-informe").addEventListener("click", () => {
     const informeContainer = document.getElementById("informe-contenedor");
     informeContainer.innerHTML = "";
@@ -136,37 +151,14 @@ document.addEventListener("DOMContentLoaded", () => {
     informeContainer.appendChild(btnDescargar);
   });
 
+  // --------- CLASIFICACIÓN AUTOMÁTICA ---------
   const categoriasPorLugar = {
-    
-    "starbucks": "Comida",
-    "mcdonalds": "Comida",
-    "burger king": "Comida",
-    "farmacity": "Salud",
-    "farmacia": "Salud",
-    "ypf": "Transporte",
-    "shell": "Transporte",
-    "sube": "Transporte",
-    "cine": "Ocio",
-    "spotify": "Ocio",
-    "jumbo": "Supermercado",
-    "carrefour": "Supermercado",
-    "galicia": "Finanzas",
-    "personal": "Servicios",
-    "movistar": "Servicios",
-    "open sports": "Ocio",
-    "sanatorio": "Salud"
+    "starbucks": "Comida", "mcdonalds": "Comida", "burger king": "Comida",
+    "farmacity": "Salud", "farmacia": "Salud", "ypf": "Transporte", "shell": "Transporte",
+    "sube": "Transporte", "cine": "Ocio", "spotify": "Ocio", "jumbo": "Supermercado",
+    "carrefour": "Supermercado", "galicia": "Finanzas", "personal": "Servicios",
+    "movistar": "Servicios", "open sports": "Ocio", "sanatorio": "Salud"
   };
-  const estiloPorCategoria = {
-  "Comida": { emoji: "🍔", color: "#ffab91" },
-  "Transporte": { emoji: "🚗", color: "#81d4fa" },
-  "Salud": { emoji: "💊", color: "#ce93d8" },
-  "Ocio": { emoji: "🎉", color: "#ffd54f" },
-  "Supermercado": { emoji: "🛒", color: "#aed581" },
-  "Finanzas": { emoji: "💳", color: "#90caf9" },
-  "Servicios": { emoji: "📱", color: "#a1887f" },
-  "Electrodomésticos": { emoji: "📺", color: "#bcaaa4" },
-  "Otros": { emoji: "📦", color: "#e0e0e0" }
-};
 
   function obtenerCategoriaAutomatica(descripcion) {
     const desc = descripcion.toLowerCase();
@@ -178,32 +170,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return "Otros";
   }
 
-  const selectorMes = document.getElementById("mes-selector");
-  const formFijo = document.getElementById("fijo-form");
-  const formExtra = document.getElementById("extra-form");
-
-  function obtenerMesActual() {
-    const fecha = new Date();
-    return `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, "0")}`;
-  }
-
-  // Flashcards de consejos financieros
+  // --------- FLASHCARDS ---------
   const frasesFinancieras = [
-    "Que tu dinero sea como tu hijo, cuidalo.",
-    "Tu dinero debe trabajar para vos.",
-    "Un presupuesto no te limita, te libera.",
-    "Controlar tus gastos es poder.",
-    "Invertí en lo que te da retorno.",
-    "Evitá gastos hormiga, suman más de lo que pensás.",
-    "El ahorro es un hábito, no un monto.",
-    "Pagate a vos primero cada mes.",
-    "La libertad financiera comienza con claridad.",
-    "Gastá menos de lo que ganás. Siempre."
+    "Que tu dinero sea como tu hijo, cuidalo.", "Tu dinero debe trabajar para vos.",
+    "Un presupuesto no te limita, te libera.", "Controlar tus gastos es poder.",
+    "Invertí en lo que te da retorno.", "Evitá gastos hormiga, suman más de lo que pensás.",
+    "El ahorro es un hábito, no un monto.", "Pagate a vos primero cada mes.",
+    "La libertad financiera comienza con claridad.", "Gastá menos de lo que ganás. Siempre."
   ];
-
   let fraseIndex = 0;
   const flashcard = document.getElementById('flashcard');
-
   function actualizarFlashcard() {
     if (!flashcard) return;
     flashcard.style.opacity = 0;
@@ -215,9 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
       fraseIndex = (fraseIndex + 1) % frasesFinancieras.length;
     }, 400);
   }
-
   setInterval(actualizarFlashcard, 6000);
 
+  // --------- SELECTOR DE MESES ---------
+  const selectorMes = document.getElementById("mes-selector");
   function generarOpcionesMeses() {
     const años = [2024, 2025, 2026];
     selectorMes.innerHTML = "";
@@ -232,13 +209,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     selectorMes.value = mesActual;
   }
-
   selectorMes.addEventListener("change", () => {
     mesActual = selectorMes.value;
     aplicarIngresosFijos();
     render();
   });
 
+  // --------- INGRESOS FIJOS ---------
+  const formFijo = document.getElementById("fijo-form");
   formFijo.addEventListener("submit", (e) => {
     e.preventDefault();
     const monto = parseFloat(document.getElementById("fijo-input").value);
@@ -262,12 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function avanzarMes(mesStr, cantidad) {
-    const [año, mes] = mesStr.split("-").map(Number);
-    const fecha = new Date(año, mes - 1 + cantidad, 1);
-    return `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, "0")}`;
-  }
-
+  // --------- AHORROS, BALANCE, GASTOS ---------
   function calcularAhorro(mes) {
     const ingreso = ingresosFijos[mes] || 0;
     const gastos = (cuotasPendientes[mes] || []).reduce((sum, g) => sum + g.monto, 0);
@@ -281,17 +254,30 @@ document.addEventListener("DOMContentLoaded", () => {
     guardarDatos();
   }
 
+  // --------- RENDER GENERAL ---------
   function render() {
     const lista = document.getElementById("expense-list");
     lista.innerHTML = "";
     const gastos = cuotasPendientes[mesActual] || [];
     let totalGastos = 0;
 
+    const estiloPorCategoria = {
+      "Comida": { emoji: "🍔", color: "#ffab91" },
+      "Transporte": { emoji: "🚗", color: "#81d4fa" },
+      "Salud": { emoji: "💊", color: "#ce93d8" },
+      "Ocio": { emoji: "🎉", color: "#ffd54f" },
+      "Supermercado": { emoji: "🛒", color: "#aed581" },
+      "Finanzas": { emoji: "💳", color: "#90caf9" },
+      "Servicios": { emoji: "📱", color: "#a1887f" },
+      "Electrodomésticos": { emoji: "📺", color: "#bcaaa4" },
+      "Otros": { emoji: "📦", color: "#e0e0e0" }
+    };
+
     gastos.forEach(g => {
       const li = document.createElement("li");
       const estilo = estiloPorCategoria[g.cat] || estiloPorCategoria["Otros"];
-li.innerHTML = `${estilo.emoji} <strong>${g.desc}</strong> - $${g.monto.toFixed(2)} <span>[${g.cat}]</span>`;
-li.style.borderLeft = `6px solid ${estilo.color}`;
+      li.innerHTML = `${estilo.emoji} <strong>${g.desc}</strong> - $${g.monto.toFixed(2)} <span>[${g.cat}]</span>`;
+      li.style.borderLeft = `6px solid ${estilo.color}`;
       lista.appendChild(li);
       totalGastos += g.monto;
     });
@@ -308,7 +294,6 @@ li.style.borderLeft = `6px solid ${estilo.color}`;
       gastoTotalElemento.textContent = `$${totalGastos.toLocaleString("es-AR", { minimumFractionDigits: 2 })}`;
     }
 
-    // Mostrar la cantidad de cuotas activas del mes actual
     const cuotasMes = (cuotasPendientes[mesActual] || []).filter(g => g.totalCuotas > 1).length;
     const cuotasElemento = document.getElementById("cuotas-mes");
     if (cuotasElemento) {
@@ -320,6 +305,7 @@ li.style.borderLeft = `6px solid ${estilo.color}`;
     renderCuotasActivas();
   }
 
+  // --------- GRAFICO CON CHART.JS ---------
   function renderGrafico(gastos) {
     const porCategoria = {};
     gastos.forEach(g => {
@@ -329,22 +315,27 @@ li.style.borderLeft = `6px solid ${estilo.color}`;
     const labels = Object.keys(porCategoria);
     const valores = Object.values(porCategoria);
 
-    tooltip: {
-      callbacks: {
-        label: function(context) {
-          const total = context.dataset.data.reduce((a, b) => a + b, 0);
-          const value = context.raw;
-          const porcentaje = ((value / total) * 100).toFixed(1);
-          const categoria = context.label;
-          return `${categoria}: ${porcentaje}%`;
+    // Destruir el chart anterior
+    if (miChart) miChart.destroy();
+    const ctx = document.getElementById("grafico-gastos").getContext("2d");
+    miChart = new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels: labels,
+        datasets: [{
+          data: valores,
+          backgroundColor: ["#ffab91", "#81d4fa", "#ce93d8", "#ffd54f", "#aed581", "#90caf9", "#a1887f", "#bcaaa4", "#e0e0e0"]
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: true }
         }
       }
-    }
-  }
-}
     });
   }
 
+  // --------- AHORROS Y CUOTAS ACTIVAS ---------
   function renderAhorros() {
     const ul = document.getElementById("ahorro-list");
     ul.innerHTML = "";
@@ -365,8 +356,7 @@ li.style.borderLeft = `6px solid ${estilo.color}`;
 
     for (const mes in cuotasPendientes) {
       cuotasPendientes[mes].forEach(g => {
-        if (g.totalCuotas === 1) return; // 👉 ignora los gastos sin cuotas
-
+        if (g.totalCuotas === 1) return;
         const key = `${g.id}`;
         if (!acumulado[key]) {
           acumulado[key] = {
@@ -380,29 +370,30 @@ li.style.borderLeft = `6px solid ${estilo.color}`;
       });
     }
 
+    const estiloPorCategoria = {
+      "Comida": { emoji: "🍔", color: "#ffab91" },
+      "Transporte": { emoji: "🚗", color: "#81d4fa" },
+      "Salud": { emoji: "💊", color: "#ce93d8" },
+      "Ocio": { emoji: "🎉", color: "#ffd54f" },
+      "Supermercado": { emoji: "🛒", color: "#aed581" },
+      "Finanzas": { emoji: "💳", color: "#90caf9" },
+      "Servicios": { emoji: "📱", color: "#a1887f" },
+      "Electrodomésticos": { emoji: "📺", color: "#bcaaa4" },
+      "Otros": { emoji: "📦", color: "#e0e0e0" }
+    };
+
     Object.values(acumulado).forEach(q => {
       const li = document.createElement("li");
       const estilo = estiloPorCategoria[q.cat] || estiloPorCategoria["Otros"];
       li.innerHTML = `${estilo.emoji} <strong>${q.desc}</strong> <span>[${q.cat}]</span> - Cuota ${q.pagadas + 1} de ${q.totalCuotas}`;
       li.style.borderLeft = `6px solid ${estilo.color}`;
-      li.style.background = `${estilo.color}33`; // color con transparencia
+      li.style.background = `${estilo.color}33`;
       lista.appendChild(li);
     });
   }
 
-  generarOpcionesMeses();
-  aplicarIngresosFijos();
-  render();
-
-  // Popup funcionalidad
-  document.getElementById("abrir-popup").addEventListener("click", () => {
-    document.getElementById("popup-gasto").classList.add("visible");
-  });
-
-  document.getElementById("cerrar-popup").addEventListener("click", () => {
-    document.getElementById("popup-gasto").classList.remove("visible");
-  });
-
+  // --------- OTROS FORMULARIOS (EXTRA, POPUPS, ETC) ---------
+  const formExtra = document.getElementById("extra-form");
   formExtra.addEventListener("submit", (e) => {
     e.preventDefault();
     const desc = document.getElementById("extra-desc").value.trim();
@@ -418,12 +409,18 @@ li.style.borderLeft = `6px solid ${estilo.color}`;
       guardarDatos();
     }
   });
+
+  // --------- POPUP ---------
+  document.getElementById("abrir-popup").addEventListener("click", () => {
+    document.getElementById("popup-gasto").classList.add("visible");
+  });
+
+  document.getElementById("cerrar-popup").addEventListener("click", () => {
+    document.getElementById("popup-gasto").classList.remove("visible");
+  });
+
+  // --------- INICIALIZACIÓN ---------
+  generarOpcionesMeses();
+  aplicarIngresosFijos();
+  render();
 });
-function clasificarCategoria(desc) {
-  const texto = desc.toLowerCase();
-  if (texto.includes("farmacia") || texto.includes("medico")) return "Salud";
-  if (texto.includes("uber") || texto.includes("nafta") || texto.includes("subte")) return "Transporte";
-  if (texto.includes("cine") || texto.includes("netflix") || texto.includes("spotify")) return "Ocio";
-  if (texto.includes("super") || texto.includes("bar") || texto.includes("restaurant") || texto.includes("comida")) return "Comida";
-  return "Otros";
-}
