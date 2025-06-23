@@ -505,6 +505,7 @@ canvas {
   flex: 1;
   min-width: 300px;
   display: flex;
+  margin-bottom: 40px;
   flex-direction: column;
   justify-content: flex-start;
 }
@@ -555,4 +556,40 @@ canvas {
 
 #btn-informe:hover {
   background: #a48bff;
+}
+
+#cuotas-activas-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+#cuotas-activas-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#cuotas-activas-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+  .gastos-e-ingresos {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .top-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .card-ingreso {
+    max-width: 100%;
+  }
+
+  #gastos-wrapper {
+    max-width: 100%;
+  }
 }

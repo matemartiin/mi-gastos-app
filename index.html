@@ -11,73 +11,71 @@
 
   <!-- HEADER -->
   <div class="header-degrade">
-  <div class="selector-mes">
-    <label for="mes-selector">Mes:</label>
-    <select id="mes-selector"></select>
-  </div>
-
-  <div class="top-header">
-    <div class="sueldo-box">
-      <h2>Ingreso Fijo</h2>
-      <form id="fijo-form">
-        <input type="number" id="fijo-input" placeholder="Sueldo mensual" />
-        <button type="submit">💾</button>
-      </form>
+    <div class="selector-mes">
+      <label for="mes-selector">Mes:</label>
+      <select id="mes-selector"></select>
     </div>
 
-
-
-    <div class="flashcard-box">
-  <div id="flashcard">Ahorrá primero, gastá después.</div>
-</div>
-
-    <div class="titulo-izquierda">
-      <div class="logo">FINZN</div>
-      <div class="saldo-box">
-        <button id="abrir-popup" class="btn-popup">+ Agregar nuevo gasto</button>
-        <h2>Dinero disponible</h2>
-        <span id="balance-neto">0</span>
-        <p id="gastos-totales" style="font-size: 18px; font-weight: 600; color: white; margin-top: 10px;">
-  Gastos del mes: <span id="gasto-total-mes">0.00</span>
-</p>
-<p id="cuotas-activos-texto" style="font-size: 18px; font-weight: 600; color: white; margin-top: 5px;">
-  Cuotas este mes: <span id="cuotas-mes">0</span>
-</p>
+    <div class="top-header">
+      <div class="sueldo-box">
+        <h2>Ingreso Fijo</h2>
+        <form id="fijo-form">
+          <input type="number" id="fijo-input" placeholder="Sueldo mensual" />
+          <button type="submit">💾</button>
+        </form>
       </div>
-      <div class="informe-wrapper">
-        <button id="btn-informe">Generar Informe</button>
+
+      <div class="flashcard-box">
+        <div id="flashcard">Ahorrá primero, gastá después.</div>
+      </div>
+
+      <div class="titulo-izquierda">
+        <div class="logo">FINZN</div>
+        <div class="saldo-box">
+          <button id="abrir-popup" class="btn-popup">+ Agregar nuevo gasto</button>
+          <h2>Dinero disponible</h2>
+          <span id="balance-neto">0</span>
+          <p id="gastos-totales" style="font-size: 18px; font-weight: 600; color: white; margin-top: 10px;">
+            Gastos del mes: <span id="gasto-total-mes">0.00</span>
+          </p>
+          <p id="cuotas-activos-texto" style="font-size: 18px; font-weight: 600; color: white; margin-top: 5px;">
+            Cuotas este mes: <span id="cuotas-mes">0</span>
+          </p>
+        </div>
+        <div class="informe-wrapper">
+          <button id="btn-informe">Generar Informe</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="container">
 
-<!-- GASTOS E INGRESOS AGRUPADOS -->
-   <div class="gastos-e-ingresos">
-  <div class="card-ingreso">
-    <h3>Ingreso Extra</h3>
-    <form id="extra-form">
-  <input type="number" id="extra-input" placeholder="Monto" required>
-  <select id="extra-cat" required>
-    <option value="" disabled selected>Seleccioná una categoría</option>
-    <option value="Ventas">Ventas</option>
-    <option value="Freelance">Freelance</option>
-    <option value="Regalo">Regalo</option>
-    <option value="Otro">Otro</option>
-  </select>
-  <button type="submit">Agregar ingreso extra</button>
-</form>
-    <ul id="extra-ingresos-list"></ul>
-  </div>
+    <!-- GASTOS E INGRESOS AGRUPADOS -->
+    <div class="gastos-e-ingresos">
+      <div class="card-ingreso">
+        <h3>Ingreso Extra</h3>
+        <form id="extra-form">
+          <input type="number" id="extra-input" placeholder="Monto" required>
+          <select id="extra-cat" required>
+            <option value="" disabled selected>Seleccioná una categoría</option>
+            <option value="Ventas">Ventas</option>
+            <option value="Freelance">Freelance</option>
+            <option value="Regalo">Regalo</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <input type="text" id="extra-desc" placeholder="Descripción" required />
+          <button type="submit">Agregar ingreso extra</button>
+        </form>
+        <ul id="extra-ingresos-list"></ul>
+      </div>
 
-  <div class="section" id="gastos-wrapper">
-    <h2>Lista de Gastos</h2>
-    <ul id="expense-list"></ul>
-  </div>
-</div>
-
-
+      <div class="section" id="gastos-wrapper">
+        <h2>Lista de Gastos</h2>
+        <ul id="expense-list"></ul>
+      </div>
+    </div>
 
     <!-- CUOTAS ACTIVAS -->
     <div class="section">
@@ -102,34 +100,46 @@
 
   </div>
 
-  <script src="app.js"></script>
-
-<!-- Popup para agregar gasto -->
-<div id="popup-gasto" class="popup-overlay">
-  <div class="popup">
-    <h2>Nuevo Gasto</h2>
-    <label for="popup-desc" style="display:none;">Descripción</label>
-    <input type="text" id="popup-desc" placeholder="Descripción del gasto" required>
-
-    <label for="popup-monto" style="display:none;">Monto</label>
-    <input type="number" id="popup-monto" placeholder="Monto" required>
-
-    <label for="popup-cuotas" style="display:none;">Cuotas</label>
-    <input type="number" id="popup-cuotas" placeholder="Cuotas (opcional)" min="1" />
-
-    <button id="popup-agregar">Agregar</button>
-    <button id="cerrar-popup" class="btn-cerrar">Cancelar</button>
+  <!-- POPUP GASTO -->
+  <div id="popup-gasto" class="popup-overlay">
+    <div class="popup">
+      <h2>Nuevo Gasto</h2>
+      <input type="text" id="popup-desc" placeholder="Descripción del gasto" required>
+      <input type="number" id="popup-monto" placeholder="Monto" required>
+      <input type="number" id="popup-cuotas" placeholder="Cuotas (opcional)" min="1" />
+      <button id="popup-agregar">Agregar</button>
+      <button id="cerrar-popup" class="btn-cerrar">Cancelar</button>
+    </div>
   </div>
-</div>
-</body>
-<script>
-  document.querySelectorAll('input[type="number"]').forEach(input => {
-    input.addEventListener('keypress', function (e) {
-      const char = String.fromCharCode(e.which);
-      if (!/[0-9.]/.test(char)) {
-        e.preventDefault();
-      }
+
+  <!-- POPUP INFORME -->
+  <div id="popup-informe" class="popup-overlay">
+    <div class="popup">
+      <h2>Informe de Gastos</h2>
+      <div id="informe-contenedor"></div>
+      <button id="cerrar-informe" class="btn-cerrar">Cerrar</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('keypress', function (e) {
+        const char = String.fromCharCode(e.which);
+        if (!/[0-9.]/.test(char)) {
+          e.preventDefault();
+        }
+      });
     });
-  });
-</script>
+
+    // Popup Informe
+    document.getElementById("btn-informe").addEventListener("click", () => {
+      document.getElementById("popup-informe").classList.add("visible");
+    });
+
+    document.getElementById("cerrar-informe").addEventListener("click", () => {
+      document.getElementById("popup-informe").classList.remove("visible");
+    });
+  </script>
+</body>
 </html>
