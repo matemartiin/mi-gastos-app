@@ -589,13 +589,13 @@ li:hover {
 #graficoGastosCategoria {
   position: absolute;
   left: 50%;
-  top: 170px; /* Ajustá este valor si lo necesitás */
+  top: 200px; /* Ajustá este valor si lo necesitás */
   transform: translateX(-50%);
   max-width: 240px;
   max-height: 240px;
   width: 240px;
   height: 240px;
-  z-index: 21;
+  z-index: 1;
   display: block;
   background: transparent; /* Fondo totalmente transparente */
   box-shadow: none;        /* Sin sombra ni border ni fondo */
@@ -609,3 +609,118 @@ li:hover {
   to { opacity: 1; transform: translate(-50%,0);}
 }
 .header-degrade { position: relative; }
+#login-container {
+  position: fixed;
+  z-index: 9999;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(34,23,64,0.97); /* violeta casi sólido */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s;
+}
+
+#login-box {
+  background: white;
+  padding: 32px 26px 24px 26px;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px 0 rgba(60,40,130,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 290px;
+}
+
+#login-box h2 {
+  margin-bottom: 18px;
+  color: #8167e6;
+  letter-spacing: .04em;
+}
+
+#login-box input[type="text"],
+#login-box input[type="password"] {
+  width: 210px;
+  padding: 10px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  border: 1px solid #a197cb;
+  border-radius: 8px;
+  outline: none;
+  transition: border .2s;
+}
+
+#login-box input:focus {
+  border: 1.6px solid #8167e6;
+}
+
+#login-btn {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  background: #8167e6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .18s;
+}
+#login-btn:hover {
+  background: #a594f9;
+}
+#register-container {
+  position: fixed;
+  z-index: 9999;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(34,23,64,0.97);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#register-box {
+  background: white;
+  padding: 32px 26px 24px 26px;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px 0 rgba(60,40,130,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 290px;
+}
+
+#register-box h2 {
+  margin-bottom: 18px;
+  color: #8167e6;
+  letter-spacing: .04em;
+}
+
+#register-box input[type="text"],
+#register-box input[type="password"] {
+  width: 210px;
+  padding: 10px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  border: 1px solid #a197cb;
+  border-radius: 8px;
+  outline: none;
+  transition: border .2s;
+}
+
+#register-box input:focus {
+  border: 1.6px solid #8167e6;
+}
+
+#register-btn {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  background: #8167e6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .18s;
+}
+#register-btn:hover {
+  background: #a594f9;
+}

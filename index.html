@@ -9,7 +9,31 @@
 </head>
 <body>
 
-  
+ <div id="login-container">
+  <div id="login-box">
+    <h2>Iniciar Sesión</h2>
+    <input type="text" id="login-user" placeholder="Usuario" />
+    <input type="password" id="login-pass" placeholder="Contraseña" />
+   <button id="login-btn" type="button">Entrar</button>
+    <div id="login-error" style="color:red;margin-top:8px;"></div>
+    <div style="margin-top:14px; text-align:center;">
+      <a href="#" id="show-register">¿No tenés cuenta? Registrate</a>
+    </div>
+  </div>
+</div>
+<div id="register-container" style="display:none;">
+  <div id="register-box">
+    <h2>Crear Cuenta</h2>
+    <input type="text" id="register-user" placeholder="Usuario" />
+    <input type="password" id="register-pass" placeholder="Contraseña" />
+    <button id="register-btn">Registrarme</button>
+    <div id="register-error" style="color:red;margin-top:8px;"></div>
+    <div style="margin-top:14px; text-align:center;">
+      <a href="#" id="show-login">¿Ya tenés cuenta? Iniciá sesión</a>
+    </div>
+  </div>
+</div>
+
   <div class="header-degrade">
     <div class="selector-mes">
       <label for="mes-selector">Mes:</label>
@@ -24,23 +48,10 @@
           <button type="submit">💾</button>
         </form>
       </div>
-      <div class="objetivos-wrapper">
-  <button class="toggle-objetivos-btn" onclick="toggleObjetivos()">🎯 Objetivos de Ahorro</button>
-  <div id="objetivosContainer" class="objetivos-container oculto">
-    <div class="form-group">
-      <input type="text" id="nombre" placeholder="Ej: Viaje" />
-    </div>
-    <div class="form-group">
-      <input type="number" id="montoObjetivo" placeholder="Objetivo: $50000" />
-    </div>
-    <div class="form-group">
-      <input type="number" id="montoAcumulado" placeholder="Ahorrado: $15000" />
-    </div>
-    <button onclick="agregarObjetivo()">Agregar</button>
-    <div id="listaObjetivos"></div>
-  </div>
-</div>
+     
+ <button class="toggle-objetivos-btn" id="abrir-popup-objetivos">🎯 Objetivos de Ahorro</button>
 
+ 
 
       <div class="flashcard-box">
         <div id="flashcard">Ahorrá primero, gastá después.</div>
@@ -136,6 +147,19 @@
       <button id="cerrar-informe" class="btn-cerrar">Cerrar</button>
     </div>
   </div>
+
+  <div id="popup-overlay-objetivos" class="popup-overlay">
+  <div class="popup" id="popup-objetivos">
+    <h2>🎯 Objetivos de Ahorro</h2>
+    <input type="text" id="nombre" placeholder="Ej: Viaje">
+    <input type="number" id="montoObjetivo" placeholder="Objetivo: $">
+    <input type="number" id="montoAcumulado" placeholder="Ahorrado: $">
+    <button onclick="agregarObjetivo()">Agregar</button>
+    <div id="listaObjetivos"></div>
+    <button id="cerrar-popup-objetivos" style="margin-top:16px;">Cerrar</button>
+  </div>
+</div>
+
 
  
 

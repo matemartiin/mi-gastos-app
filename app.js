@@ -1,9 +1,76 @@
 function toggleObjetivos() {
-    const contenedor = document.getElementById("objetivosContainer");
-    contenedor.classList.toggle("oculto");
-  }
+  const contenedor = document.getElementById("objetivosContainer");
+  contenedor.classList.toggle("oculto");
+}
 
 document.addEventListener("DOMContentLoaded", () => {
+// ---- LOGIN/REGISTRO ----
+document.querySelector(".header-degrade").style.display = "none";
+document.querySelector(".container").style.display = "none";
+const loginContainer = document.getElementById("login-container");
+const registerContainer = document.getElementById("register-container");
+const loginBtn = document.getElementById("login-btn");
+
+// LOGIN
+loginBtn.addEventListener("click", async (e) => {
+  e.preventDefault(); // <--- MUY IMPORTANTE
+  const user = document.getElementById("login-user").value.trim();
+  const pass = document.getElementById("login-pass").value;
+  if (!user || !pass) {
+    document.getElementById("login-error").textContent = "Completá usuario y contraseña";
+    return;
+  }
+  const res = await fetch("http://localhost:3001/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user, pass }),
+  });
+  const data = await res.json();
+  if (data.ok) {
+    loginContainer.style.display = "none";
+    document.querySelector(".header-degrade").style.display = "";
+    document.querySelector(".container").style.display = "";
+    localStorage.setItem("usuarioActual", user);
+    // (Llamá aquí a tu función para cargar datos y renderizar la app)
+    inicializarDatosUsuario && inicializarDatosUsuario();
+  } else {
+    document.getElementById("login-error").textContent = data.error || "Login incorrecto";
+  }
+});
+
+// REGISTRO
+document.getElementById("show-register").addEventListener("click", (e) => {
+  e.preventDefault();
+  loginContainer.style.display = "none";
+  registerContainer.style.display = "flex";
+});
+document.getElementById("show-login").addEventListener("click", (e) => {
+  e.preventDefault();
+  registerContainer.style.display = "none";
+  loginContainer.style.display = "flex";
+});
+document.getElementById("register-btn").addEventListener("click", async () => {
+  const user = document.getElementById("register-user").value.trim();
+  const pass = document.getElementById("register-pass").value;
+  if (!user || !pass) {
+    document.getElementById("register-error").textContent = "Completá usuario y contraseña";
+    return;
+  }
+  const res = await fetch("http://localhost:3001/api/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user, pass }),
+  });
+  const data = await res.json();
+  if (data.ok) {
+    registerContainer.style.display = "none";
+    loginContainer.style.display = "flex";
+    document.getElementById("login-error").textContent = "¡Cuenta creada! Ahora iniciá sesión.";
+  } else {
+    document.getElementById("register-error").textContent = data.error || "No se pudo crear la cuenta";
+  }
+});
+
   // Variables globales de datos
   const gastosPorMes = {};
   const ingresosFijos = {};
@@ -12,26 +79,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const cuotasPendientes = {};
 
   // Guardar y cargar datos desde localStorage
-  function guardarDatos() {
-    const data = {
-      ingresosFijos,
-      ingresosExtras,
-      ahorros,
-      cuotasPendientes
-    };
-    localStorage.setItem("finzn-data", JSON.stringify(data));
-  }
+function guardarDatos() {
+  const user = localStorage.getItem("usuarioActual") || "invitado";
+  const data = {
+    ingresosFijos,
+    ingresosExtras,
+    ahorros,
+    cuotasPendientes
+  };
+  localStorage.setItem("finzn-data-" + user, JSON.stringify(data));
+}
 
-  function cargarDatos() {
-    const data = localStorage.getItem("finzn-data");
-    if (data) {
-      const parsed = JSON.parse(data);
-      Object.assign(ingresosFijos, parsed.ingresosFijos || {});
-      Object.assign(ingresosExtras, parsed.ingresosExtras || {});
-      Object.assign(ahorros, parsed.ahorros || {});
-      Object.assign(cuotasPendientes, parsed.cuotasPendientes || {});
-    }
+function cargarDatos() {
+  const user = localStorage.getItem("usuarioActual") || "invitado";
+  const data = localStorage.getItem("finzn-data-" + user);
+  if (data) {
+    const parsed = JSON.parse(data);
+    Object.assign(ingresosFijos, parsed.ingresosFijos || {});
+    Object.assign(ingresosExtras, parsed.ingresosExtras || {});
+    Object.assign(ahorros, parsed.ahorros || {});
+    Object.assign(cuotasPendientes, parsed.cuotasPendientes || {});
   }
+}
+  function inicializarDatosUsuario() {
+  cargarDatos();         // Trae los datos del usuario logueado
+  cargarObjetivos();     // <- ¡ESTO ES LO QUE TE FALTABA!
+  renderObjetivos();
+  render();
+}
+
 
   function obtenerMesActual() {
     const fecha = new Date();
@@ -398,6 +474,13 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("cerrar-informe").addEventListener("click", () => {
     document.getElementById("popup-informe").classList.remove("visible");
   });
+  document.getElementById('abrir-popup-objetivos').addEventListener('click', () => {
+  document.getElementById('popup-overlay-objetivos').classList.add('visible');
+});
+
+document.getElementById('cerrar-popup-objetivos').addEventListener('click', () => {
+  document.getElementById('popup-overlay-objetivos').classList.remove('visible');
+});
 
   // --------- INICIALIZACIÓN ---------
   generarOpcionesMeses();
@@ -462,11 +545,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --------- OBJETIVOS DE AHORRO ---------
-  let objetivos = JSON.parse(localStorage.getItem('objetivosAhorro')) || [];
+  let objetivos = [];
 
-  function guardarObjetivos() {
-    localStorage.setItem('objetivosAhorro', JSON.stringify(objetivos));
-  }
+function guardarObjetivos() {
+  const user = localStorage.getItem("usuarioActual") || "invitado";
+  localStorage.setItem('objetivosAhorro-' + user, JSON.stringify(objetivos));
+}
+
+function cargarObjetivos() {
+  const user = localStorage.getItem("usuarioActual") || "invitado";
+  objetivos = JSON.parse(localStorage.getItem('objetivosAhorro-' + user)) || [];
+}
 
   function renderObjetivos() {
     const lista = document.getElementById('listaObjetivos');
@@ -561,17 +650,18 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           tooltip: {
             callbacks: {
-              label: function(context) {
-                const label = context.label || '';
-                const value = context.parsed || 0;
-                const total = context.chart.getDatasetMeta(0).total;
-                if (total === 0) {
-                  return `${label}: $0 (0%)`;
-                }
-                const percentage = ((value / total) * 100).toFixed(1) + '%';
-                const formattedValue = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
-                return `${label}: ${formattedValue} (${percentage})`;
-              }
+             label: function(context) {
+  const label = context.label || '';
+  const value = context.raw || 0; // el monto gastado en esa categoría
+  const dataset = context.dataset.data;
+  const total = dataset.reduce((acc, val) => acc + val, 0);
+
+  const porcentaje = total === 0 ? 0 : ((value / total) * 100);
+  // Formatea el valor en ARS y porcentaje
+  const formattedValue = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2 }).format(value);
+  const formattedPorcentaje = porcentaje.toFixed(1) + "%";
+  return `${label}: ${formattedValue} (${formattedPorcentaje})`;
+}
             }
           }
         }
