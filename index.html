@@ -9,7 +9,7 @@
 </head>
 <body>
 
-  <!-- HEADER -->
+  
   <div class="header-degrade">
     <div class="selector-mes">
       <label for="mes-selector">Mes:</label>
@@ -24,11 +24,32 @@
           <button type="submit">💾</button>
         </form>
       </div>
+      <div class="objetivos-wrapper">
+  <button class="toggle-objetivos-btn" onclick="toggleObjetivos()">🎯 Objetivos de Ahorro</button>
+  <div id="objetivosContainer" class="objetivos-container oculto">
+    <div class="form-group">
+      <input type="text" id="nombre" placeholder="Ej: Viaje" />
+    </div>
+    <div class="form-group">
+      <input type="number" id="montoObjetivo" placeholder="Objetivo: $50000" />
+    </div>
+    <div class="form-group">
+      <input type="number" id="montoAcumulado" placeholder="Ahorrado: $15000" />
+    </div>
+    <button onclick="agregarObjetivo()">Agregar</button>
+    <div id="listaObjetivos"></div>
+  </div>
+</div>
+
 
       <div class="flashcard-box">
         <div id="flashcard">Ahorrá primero, gastá después.</div>
       </div>
 
+     <canvas id="graficoGastosCategoria" width="240" height="240"></canvas>
+
+
+      
       <div class="titulo-izquierda">
         <div class="logo">FINZN</div>
         <div class="saldo-box">
@@ -49,10 +70,10 @@
     </div>
   </div>
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <div class="container">
 
-    <!-- GASTOS E INGRESOS AGRUPADOS -->
+  <div class="container">
+    
+
     <div class="gastos-e-ingresos">
       <div class="card-ingreso">
         <h3>Ingreso Extra</h3>
@@ -77,19 +98,15 @@
       </div>
     </div>
 
-    <!-- CUOTAS ACTIVAS -->
+
     <div class="section">
       <h2>Cuotas Activas</h2>
       <ul id="cuotas-activas-list"></ul>
     </div>
 
-    <!-- GRÁFICO DE GASTOS -->
-    <div class="section">
-      <h2>Gráfico de gastos</h2>
-      <canvas id="grafico-gastos" width="300" height="300"></canvas>
-    </div>
 
-    <!-- AHORROS -->
+
+
     <div class="ahorro-section">
       <h2>Ahorros Acumulados</h2>
       <ul id="ahorro-list"></ul>
@@ -99,7 +116,7 @@
     </div>
   </div>
 
-  <!-- POPUP GASTO -->
+
   <div id="popup-gasto" class="popup-overlay">
     <div class="popup">
       <h2>Nuevo Gasto</h2>
@@ -111,7 +128,7 @@
     </div>
   </div>
 
-  <!-- POPUP INFORME -->
+
   <div id="popup-informe" class="popup-overlay">
     <div class="popup">
       <h2>Informe de Gastos</h2>
@@ -121,54 +138,11 @@
   </div>
 
  
-  <!-- Scripts -->
+
   <script src="app.js"></script>
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const mascota = document.getElementById("mascota-icono");
-    const burbuja = document.getElementById("chat-burbuja");
-    const enviar = document.getElementById("enviar-mensaje");
-    const input = document.getElementById("chat-input");
-    const mensajes = document.getElementById("chat-mensajes");
+  
 
-    // Mostrar/ocultar burbuja
-    mascota?.addEventListener("click", () => {
-      burbuja?.classList.toggle("oculto");
-    });
-
-    // Enviar mensaje
-    enviar?.addEventListener("click", async () => {
-      const msg = input.value.trim();
-      if (!msg) return;
-
-      mensajes.innerHTML += `<p><strong>Vos:</strong> ${msg}</p>`;
-      input.value = "";
-
-      try {
-        const res = await fetch("http://localhost:3001/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: msg }),
-        });
-
-        const data = await res.json();
-
-        if (data.reply) {
-          mensajes.innerHTML += `<p><strong>Mascotita:</strong> ${data.reply}</p>`;
-        } else {
-          mensajes.innerHTML += `<p><strong>Mascotita:</strong> Ups, no entendí eso.</p>`;
-        }
-      } catch (error) {
-        mensajes.innerHTML += `<p style="color:red;"><strong>Mascotita:</strong> Error al conectarme con el servidor.</p>`;
-        console.error("Error al conectarse con la API:", error);
-      }
-    });
-  });
-</script>
-
-
-   <!-- MASCOTA CHAT -->
-  <div id="mascota-chat">
+   <div id="mascota-chat">
     <img src="mascota.png" alt="Mascota IA" id="mascota-icono" />
     <div id="chat-burbuja" class="oculto">
       <div id="chat-mensajes"></div>
@@ -176,5 +150,6 @@
       <button id="enviar-mensaje">Enviar</button>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

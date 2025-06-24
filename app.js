@@ -1,3 +1,8 @@
+function toggleObjetivos() {
+    const contenedor = document.getElementById("objetivosContainer");
+    contenedor.classList.toggle("oculto");
+  }
+
 document.addEventListener("DOMContentLoaded", () => {
   // Variables globales de datos
   const gastosPorMes = {};
@@ -42,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarDatos();
 
   let mesActual = obtenerMesActual();
-  let miChart = null;
 
   // --------- GASTO: AGREGAR ----------
   document.getElementById("popup-agregar").addEventListener("click", () => {
@@ -72,13 +76,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    guardarDatos();
+
     document.getElementById("popup-desc").value = "";
     document.getElementById("popup-monto").value = "";
     document.getElementById("popup-cuotas").value = "";
     document.getElementById("popup-gasto").classList.remove("visible");
 
     render();
-    guardarDatos();
   });
 
   // --------- INFORME / RECOMENDACIONES ----------
@@ -301,39 +306,10 @@ document.addEventListener("DOMContentLoaded", () => {
       cuotasElemento.textContent = cuotasMes;
     }
 
-    renderGrafico(gastos);
+    // renderGrafico(gastos); // ESTA LÍNEA YA NO VA
+    generarGraficoGastosPorCategoria(); // ESTA SÍ DEBE QUEDAR
     renderAhorros();
     renderCuotasActivas();
-  }
-
-  // --------- GRAFICO CON CHART.JS ---------
-  function renderGrafico(gastos) {
-    const porCategoria = {};
-    gastos.forEach(g => {
-      porCategoria[g.cat] = (porCategoria[g.cat] || 0) + g.monto;
-    });
-
-    const labels = Object.keys(porCategoria);
-    const valores = Object.values(porCategoria);
-
-    // Destruir el chart anterior
-    if (miChart) miChart.destroy();
-    const ctx = document.getElementById("grafico-gastos").getContext("2d");
-    miChart = new Chart(ctx, {
-      type: "pie",
-      data: {
-        labels: labels,
-        datasets: [{
-          data: valores,
-          backgroundColor: ["#ffab91", "#81d4fa", "#ce93d8", "#ffd54f", "#aed581", "#90caf9", "#a1887f", "#bcaaa4", "#e0e0e0"]
-        }]
-      },
-      options: {
-        plugins: {
-          legend: { display: true }
-        }
-      }
-    });
   }
 
   // --------- AHORROS Y CUOTAS ACTIVAS ---------
@@ -420,78 +396,186 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("popup-gasto").classList.remove("visible");
   });
   document.getElementById("cerrar-informe").addEventListener("click", () => {
-  document.getElementById("popup-informe").classList.remove("visible");
-});
-
+    document.getElementById("popup-informe").classList.remove("visible");
+  });
 
   // --------- INICIALIZACIÓN ---------
   generarOpcionesMeses();
   aplicarIngresosFijos();
   render();
-});
-document.getElementById('mascota-icono').addEventListener('click', () => {
-  document.getElementById('chat-burbuja').classList.toggle('oculto');
-});
 
-document.getElementById('enviar-mensaje').addEventListener('click', async () => {
-  const input = document.getElementById('chat-input');
-  const mensaje = input.value;
-  if (!mensaje.trim()) return;
+  // --------- MASCOTA CHAT ---------
+  const mascota = document.getElementById("mascota-icono");
+  const burbuja = document.getElementById("chat-burbuja");
+  const enviar = document.getElementById("enviar-mensaje");
+  const input = document.getElementById("chat-input");
+  const mensajes = document.getElementById("chat-mensajes");
 
-  const chat = document.getElementById('chat-mensajes');
-  chat.innerHTML += `<p><strong>Vos:</strong> ${mensaje}</p>`;
-  input.value = '';
+  mascota?.addEventListener("click", () => {
+    burbuja?.classList.toggle("oculto");
+  });
 
-  // Simulación de IA (acá podrías integrar OpenAI)
-  const respuesta = await responderConIA(mensaje);
-  chat.innerHTML += `<p><strong>FINZN:</strong> ${respuesta}</p>`;
-});
+  enviar?.addEventListener("click", async () => {
+    const msg = input.value.trim();
+    if (!msg) return;
 
-async function responderConIA(pregunta) {
-  // Llamada real a una IA (requiere backend con API key de OpenAI)
-  return "¡Esa es una buena pregunta! Aún estoy aprendiendo 😊";
-}
-const mascota = document.getElementById("mascota-icono");
-const burbuja = document.getElementById("chat-burbuja");
-const enviar = document.getElementById("enviar-mensaje");
-const input = document.getElementById("chat-input");
-const mensajes = document.getElementById("chat-mensajes");
+    mensajes.innerHTML += `<p><strong>Vos:</strong> ${msg}</p>`;
+    input.value = "";
 
-mascota.addEventListener("click", () => {
-  burbuja.classList.toggle("visible");
-});
-
-enviar.addEventListener("click", async () => {
-  const msg = input.value.trim();
-  if (!msg) return;
-
-  // Mostrar mensaje del usuario
-  mensajes.innerHTML += `<p><strong>Vos:</strong> ${msg}</p>`;
-  input.value = "";
-
-  // Mostrar mensaje de "escribiendo..."
-  const escribiendo = document.createElement("p");
-  escribiendo.innerHTML = `<em>Mascotita está escribiendo...</em>`;
-  mensajes.appendChild(escribiendo);
-  mensajes.scrollTop = mensajes.scrollHeight;
-
-  try {
-    const res = await fetch("http://localhost:3001/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: msg }),
-    });
-
-    const data = await res.json();
-
-    // Eliminar "escribiendo..." y mostrar respuesta
-    escribiendo.remove();
-    mensajes.innerHTML += `<p><strong>Mascotita:</strong> ${data.reply}</p>`;
+    const escribiendo = document.createElement("p");
+    escribiendo.innerHTML = `<em>Mascotita está escribiendo...</em>`;
+    mensajes.appendChild(escribiendo);
     mensajes.scrollTop = mensajes.scrollHeight;
 
-  } catch (err) {
+    try {
+  const res = await fetch("http://localhost:3001/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: msg }),
+  });
+
+  if (!res.ok) {
     escribiendo.remove();
-    mensajes.innerHTML += `<p style="color:red;"><strong>Error:</strong> No se pudo conectar con la IA.</p>`;
-    console.error("Error en el fetch:", err);
+    mensajes.innerHTML += `<p style="color:red;"><strong>Mascotita:</strong> El servidor respondió con un error (${res.status}: ${res.statusText}).</p>`;
+    mensajes.scrollTop = mensajes.scrollHeight;
+    console.error("Error de respuesta del servidor:", res.status, res.statusText);
+    return;
+  }
+
+  const data = await res.json();
+
+  escribiendo.remove();
+
+  if (data.reply) {
+    mensajes.innerHTML += `<p><strong>Mascotita:</strong> ${data.reply}</p>`;
+  } else {
+    mensajes.innerHTML += `<p style="color:red;"><strong>Mascotita:</strong> La IA no envió ninguna respuesta válida.</p>`;
+    console.error("La respuesta de la IA no tenía el campo 'reply'. Respuesta completa:", data);
+  }
+  mensajes.scrollTop = mensajes.scrollHeight;
+} catch (err) {
+  escribiendo.remove();
+  mensajes.innerHTML += `<p style="color:red;"><strong>Mascotita:</strong> Error de conexión: no se pudo contactar al servidor de IA.<br>Revisá tu conexión o probá más tarde.</p>`;
+  console.error("Error en el fetch de la mascotita:", err);
+}
+
+  });
+
+  // --------- OBJETIVOS DE AHORRO ---------
+  let objetivos = JSON.parse(localStorage.getItem('objetivosAhorro')) || [];
+
+  function guardarObjetivos() {
+    localStorage.setItem('objetivosAhorro', JSON.stringify(objetivos));
+  }
+
+  function renderObjetivos() {
+    const lista = document.getElementById('listaObjetivos');
+    if (!lista) return;
+    lista.innerHTML = '';
+    objetivos.forEach((obj, index) => {
+      const porcentaje = Math.min((obj.montoAcumulado / obj.montoObjetivo) * 100, 100).toFixed(1);
+      const div = document.createElement('div');
+      div.className = 'objetivo';
+      div.innerHTML = `
+        <strong>${obj.nombre}</strong><br/>
+        $${obj.montoAcumulado} / $${obj.montoObjetivo} (${porcentaje}%)
+        <div class="progress-container">
+          <div class="progress-bar" style="width: ${porcentaje}%"></div>
+        </div>
+        <button class="delete-btn" onclick="eliminarObjetivo(${index})">Eliminar</button>
+      `;
+      lista.appendChild(div);
+    });
+  }
+
+  function agregarObjetivo() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const montoObjetivo = parseFloat(document.getElementById('montoObjetivo').value);
+    const montoAcumulado = parseFloat(document.getElementById('montoAcumulado').value);
+
+    if (!nombre || isNaN(montoObjetivo) || isNaN(montoAcumulado) || montoObjetivo <= 0 || montoAcumulado < 0) {
+      alert('Completa todos los campos correctamente.');
+      return;
+    }
+
+    objetivos.push({ nombre, montoObjetivo, montoAcumulado });
+    guardarObjetivos();
+    renderObjetivos();
+
+    document.getElementById('nombre').value = '';
+    document.getElementById('montoObjetivo').value = '';
+    document.getElementById('montoAcumulado').value = '';
+  }
+
+  function eliminarObjetivo(index) {
+    if (confirm('¿Eliminar este objetivo?')) {
+      objetivos.splice(index, 1);
+      guardarObjetivos();
+      renderObjetivos();
+    }
+  }
+
+  
+
+  // --------- GRÁFICO TORTA POR CATEGORÍA ---------
+  function generarGraficoGastosPorCategoria() {
+    const canvas = document.getElementById("graficoGastosCategoria");
+    if (!canvas) return;
+
+    const gastos = cuotasPendientes[mesActual] || [];
+
+    const gastosPorCategoria = {};
+    gastos.forEach(gasto => {
+      const categoria = gasto.cat || "Sin categoría";
+      gastosPorCategoria[categoria] = (gastosPorCategoria[categoria] || 0) + gasto.monto;
+    });
+
+    const labels = Object.keys(gastosPorCategoria);
+    const datos = Object.values(gastosPorCategoria);
+
+    const ctx = canvas.getContext("2d");
+
+    if (window.graficoTortaGastos) {
+      window.graficoTortaGastos.destroy();
+    }
+
+    window.graficoTortaGastos = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Gastos por categoría',
+          data: datos,
+          backgroundColor: [
+            '#ffab91', '#81d4fa', '#ce93d8', '#ffd54f',
+            '#aed581', '#90caf9', '#a1887f', '#f48fb1'
+          ],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const label = context.label || '';
+                const value = context.parsed || 0;
+                const total = context.chart.getDatasetMeta(0).total;
+                if (total === 0) {
+                  return `${label}: $0 (0%)`;
+                }
+                const percentage = ((value / total) * 100).toFixed(1) + '%';
+                const formattedValue = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value);
+                return `${label}: ${formattedValue} (${percentage})`;
+              }
+            }
+          }
+        }
+      }
+    });
   }
 });

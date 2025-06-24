@@ -152,8 +152,8 @@ button:hover {
 }
 
 #btn-informe {
-  background: #8f71ff;
-  color: white;
+  background: #ffd54f;
+  color: rgb(0, 0, 0);
   border: none;
   padding: 10px 16px;
   border-radius: 10px;
@@ -164,7 +164,7 @@ button:hover {
 }
 
 #btn-informe:hover {
-  background: #a48bff;
+  background: #ffca28;
 }
 
 /* FORMULARIOS */
@@ -335,11 +335,12 @@ li:hover {
   margin-top: 5px;
 }
 
-/* GRAFICO */
-canvas {
-  max-width: 400px;
-  margin-top: 20px;
-  transition: all 0.3s ease;
+/* GRÁFICO (DE AHORRO) */
+#graficoAhorro {
+  display: block;
+  margin: 10px auto;
+  max-width: 200px;
+  max-height: 200px;
 }
 
 /* POPUPS */
@@ -455,8 +456,8 @@ canvas {
 }
 
 #enviar-mensaje {
-  background-color: #8f71ff;
-  color: white;
+  background-color: #ffd54f;
+  color: rgb(0, 0, 0);
   border: none;
   padding: 8px 14px;
   border-radius: 8px;
@@ -466,7 +467,7 @@ canvas {
 }
 
 #enviar-mensaje:hover {
-  background-color: #a48bff;
+  background-color: #ffca28;
 }
 
 #chat-mensajes {
@@ -479,4 +480,132 @@ canvas {
   color: #333;
   border: 1px solid #eee;
 }
+.objetivos-wrapper {
+  margin-top: 20px;
+  max-width: 300px;
+  margin-left: 40px;
+}
 
+.toggle-objetivos-btn {
+  background-color: #ffd54f;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background-color 0.3s;
+}
+
+.toggle-objetivos-btn:hover {
+  background-color: #ffca28;
+}
+
+.objetivos-container {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+  max-height: 1000px;
+  opacity: 1;
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+.objetivos-container.oculto {
+  max-height: 0;
+  opacity: 0;
+  transform: scaleY(0.95);
+  padding: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: max-height 0.4s, opacity 0.4s, padding 0.2s;
+}
+
+
+#listaObjetivos .objetivo {
+  font-size: 0.9em;
+  margin-top: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #eee;
+}
+
+.progress-container {
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  height: 10px;
+  margin-top: 5px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #27ae60;
+  border-radius: 6px;
+  transition: width 0.4s ease-in-out;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  border: none;
+  padding: 4px 8px;
+  color: white;
+  border-radius: 6px;
+  margin-top: 5px;
+  cursor: pointer;
+  font-size: 0.75em;
+}
+
+/* Estilos para el nuevo wrapper del gráfico de torta */
+.grafico-torta-wrapper {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 260px;
+    max-width: 360px;
+}
+
+.grafico-torta-wrapper h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+}
+
+#graficoGastosCategoria {
+  display: block;
+  margin: 0 auto;
+  max-width: 200px;
+  max-height: 200px;
+}
+#graficoGastosCategoria {
+  position: absolute;
+  left: 50%;
+  top: 170px; /* Ajustá este valor si lo necesitás */
+  transform: translateX(-50%);
+  max-width: 240px;
+  max-height: 240px;
+  width: 240px;
+  height: 240px;
+  z-index: 21;
+  display: block;
+  background: transparent; /* Fondo totalmente transparente */
+  box-shadow: none;        /* Sin sombra ni border ni fondo */
+  border-radius: 0;
+  padding: 0;
+  animation: fadeInUp 0.5s;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translate(-50%,24px);}
+  to { opacity: 1; transform: translate(-50%,0);}
+}
+.header-degrade { position: relative; }
