@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --------- INFORME / RECOMENDACIONES ----------
   document.getElementById("btn-informe").addEventListener("click", () => {
+    document.getElementById("popup-informe").classList.add("visible");
     const informeContainer = document.getElementById("informe-contenedor");
     informeContainer.innerHTML = "";
     const gastos = cuotasPendientes[mesActual] || [];
@@ -418,9 +419,79 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("cerrar-popup").addEventListener("click", () => {
     document.getElementById("popup-gasto").classList.remove("visible");
   });
+  document.getElementById("cerrar-informe").addEventListener("click", () => {
+  document.getElementById("popup-informe").classList.remove("visible");
+});
+
 
   // --------- INICIALIZACIÓN ---------
   generarOpcionesMeses();
   aplicarIngresosFijos();
   render();
+});
+document.getElementById('mascota-icono').addEventListener('click', () => {
+  document.getElementById('chat-burbuja').classList.toggle('oculto');
+});
+
+document.getElementById('enviar-mensaje').addEventListener('click', async () => {
+  const input = document.getElementById('chat-input');
+  const mensaje = input.value;
+  if (!mensaje.trim()) return;
+
+  const chat = document.getElementById('chat-mensajes');
+  chat.innerHTML += `<p><strong>Vos:</strong> ${mensaje}</p>`;
+  input.value = '';
+
+  // Simulación de IA (acá podrías integrar OpenAI)
+  const respuesta = await responderConIA(mensaje);
+  chat.innerHTML += `<p><strong>FINZN:</strong> ${respuesta}</p>`;
+});
+
+async function responderConIA(pregunta) {
+  // Llamada real a una IA (requiere backend con API key de OpenAI)
+  return "¡Esa es una buena pregunta! Aún estoy aprendiendo 😊";
+}
+const mascota = document.getElementById("mascota-icono");
+const burbuja = document.getElementById("chat-burbuja");
+const enviar = document.getElementById("enviar-mensaje");
+const input = document.getElementById("chat-input");
+const mensajes = document.getElementById("chat-mensajes");
+
+mascota.addEventListener("click", () => {
+  burbuja.classList.toggle("visible");
+});
+
+enviar.addEventListener("click", async () => {
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  // Mostrar mensaje del usuario
+  mensajes.innerHTML += `<p><strong>Vos:</strong> ${msg}</p>`;
+  input.value = "";
+
+  // Mostrar mensaje de "escribiendo..."
+  const escribiendo = document.createElement("p");
+  escribiendo.innerHTML = `<em>Mascotita está escribiendo...</em>`;
+  mensajes.appendChild(escribiendo);
+  mensajes.scrollTop = mensajes.scrollHeight;
+
+  try {
+    const res = await fetch("http://localhost:3001/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg }),
+    });
+
+    const data = await res.json();
+
+    // Eliminar "escribiendo..." y mostrar respuesta
+    escribiendo.remove();
+    mensajes.innerHTML += `<p><strong>Mascotita:</strong> ${data.reply}</p>`;
+    mensajes.scrollTop = mensajes.scrollHeight;
+
+  } catch (err) {
+    escribiendo.remove();
+    mensajes.innerHTML += `<p style="color:red;"><strong>Error:</strong> No se pudo conectar con la IA.</p>`;
+    console.error("Error en el fetch:", err);
+  }
 });
