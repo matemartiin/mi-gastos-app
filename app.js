@@ -9,6 +9,8 @@ document.querySelector(".header-degrade").style.display = "none";
 document.querySelector(".container").style.display = "none";
 const loginContainer = document.getElementById("login-container");
 const registerContainer = document.getElementById("register-container");
+loginContainer.style.display = "flex";
+registerContainer.style.display = "none";
 const loginBtn = document.getElementById("login-btn");
 
 // LOGIN
@@ -482,6 +484,27 @@ document.getElementById('cerrar-popup-objetivos').addEventListener('click', () =
   document.getElementById('popup-overlay-objetivos').classList.remove('visible');
 });
 
+// Agregar objetivo desde el popup (usa id, NO onclick)
+document.getElementById('agregar-objetivo-btn').addEventListener('click', () => {
+  const nombre = document.getElementById('nombre').value.trim();
+  const montoObjetivo = parseFloat(document.getElementById('montoObjetivo').value);
+  const montoAcumulado = parseFloat(document.getElementById('montoAcumulado').value);
+
+  if (!nombre || isNaN(montoObjetivo) || isNaN(montoAcumulado) || montoObjetivo <= 0 || montoAcumulado < 0) {
+    alert('Completa todos los campos correctamente.');
+    return;
+  }
+
+  objetivos.push({ nombre, montoObjetivo, montoAcumulado });
+  guardarObjetivos();
+  renderObjetivos();
+
+  // Limpia y cierra popup
+  document.getElementById('nombre').value = '';
+  document.getElementById('montoObjetivo').value = '';
+  document.getElementById('montoAcumulado').value = '';
+  document.getElementById('popup-overlay-objetivos').classList.remove('visible');
+});
   // --------- INICIALIZACIÓN ---------
   generarOpcionesMeses();
   aplicarIngresosFijos();
