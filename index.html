@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500..700&family=DM+Sans:wght@400;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500..700&family=DM+Sans:wght@400;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FINZN</title>
@@ -9,197 +9,250 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
-<!-- LOGIN & REGISTER -->
-<div id="login-container">
-  <div id="login-box" class="glass-login-card">
-    <h2>Iniciar Sesión</h2>
-    <input type="text" id="login-user" placeholder="Usuario" autocomplete="username" />
-    <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password" />
-    <button id="login-btn" type="button">Entrar</button>
-    <div id="login-error" class="form-error"></div>
-    <div class="form-link">
-      <a href="#" id="show-register">¿No tenés cuenta? <b>Registrate</b></a>
+  <!-- ALERTA Y NOTIFICACIONES -->
+  <div id="alerta-financiera" class="alerta-amarilla" style="display:none;"></div>
+  <!-- LOGIN & REGISTER -->
+  <div id="login-container">
+    <div id="login-box" class="glass-login-card">
+      <h2>Iniciar Sesión</h2>
+      <input type="text" id="login-user" placeholder="Usuario" autocomplete="username" />
+      <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password" />
+      <button id="login-btn" type="button">Entrar</button>
+      <div id="login-error" class="form-error"></div>
+      <div class="form-link">
+        <a href="#" id="show-register">¿No tenés cuenta? <b>Registrate</b></a>
+      </div>
     </div>
   </div>
-</div>
-<div id="register-container" style="display:none;">
-  <div id="register-box" class="glass-login-card">
-    <h2>Crear Cuenta</h2>
-    <input type="text" id="register-user" placeholder="Usuario" autocomplete="username" />
-    <input type="password" id="register-pass" placeholder="Contraseña" autocomplete="new-password" />
-    <button id="register-btn">Registrarme</button>
-    <div id="register-error" class="form-error"></div>
-    <div class="form-link">
-      <a href="#" id="show-login">¿Ya tenés cuenta? <b>Iniciá sesión</b></a>
+  <div id="register-container" style="display:none;">
+    <div id="register-box" class="glass-login-card">
+      <h2>Crear Cuenta</h2>
+      <input type="text" id="register-user" placeholder="Usuario" autocomplete="username" />
+      <input type="password" id="register-pass" placeholder="Contraseña" autocomplete="new-password" />
+      <button id="register-btn">Registrarme</button>
+      <div id="register-error" class="form-error"></div>
+      <div class="form-link">
+        <a href="#" id="show-login">¿Ya tenés cuenta? <b>Iniciá sesión</b></a>
+      </div>
     </div>
   </div>
-</div>
-
-<!-- HEADER -->
-<div class="header-degrade">
-  <div class="selector-mes">
-    <label for="mes-selector">Mes:</label>
-    <select id="mes-selector"></select>
-  </div>
-  <div class="top-header">
-    <!-- BLOQUE IZQUIERDA -->
-    <div class="bloque-izq">
-<div class="sueldo-box glass-card ingreso-fijo-card">
-  <h2>Ingreso Fijo</h2>
-  <form id="fijo-form" class="ingreso-fijo-form">
-    <input type="number" id="fijo-input" placeholder="Sueldo mensual" />
-    <button type="submit" title="Guardar ingreso fijo" class="icon-btn-linda">💾</button>
-  </form>
-</div>
-
-
-      
-      <!-- OBJETIVOS AHORRO -->
-      <div class="card-objetivos-lateral glass-card">
-        <div class="objetivos-header">
-          <h2>🎯 Objetivos de Ahorro</h2>
-          <button id="abrir-popup-objetivos" class="objetivos-add-btn" title="Agregar objetivo">＋</button>
+  
+  <!-- HEADER -->
+  <header class="finzn-header-pc new">
+    <div class="finzn-header-row">
+      <div class="finzn-header-logo">
+        <span class="finzn-titulo-principal new">FINZN</span>
+      </div>
+      <div class="finzn-header-user">
+        <button id="toggle-darkmode" title="Cambiar tema" style="font-size:1.5em;background:none;border:none;cursor:pointer;">🌙</button>
+        <span id="usuario-logueado"></span>
+        <div class="selector-mes">
+          <label for="mes-selector">Mes:</label>
+          <select id="mes-selector"></select>
         </div>
-        <div id="listaObjetivos"></div>
-        <div class="objetivos-progreso-general">
-          <div class="progress-container">
-            <div class="progress-bar" id="progreso-total-objetivos"></div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- DASHBOARD GRID PRINCIPAL -->
+  <div class="finzn-main-grid">
+    <!-- COL 1: OBJETIVOS, CUENTAS, SUELDO, INGRESO EXTRA, AHORRO -->
+    <div class="finzn-col finzn-col-cuentas">
+      <!-- OBJETIVOS DE AHORRO (PRIMERO ARRIBA) -->
+      <div class="tarjeta tarjeta-objetivos glass">
+        <div class="icon-circle" style="background:#eafff5"><span>🎯</span></div>
+        <div>
+          <h2>Objetivos</h2>
+          <div id="listaObjetivos"></div>
+          <button id="abrir-popup-objetivos" class="objetivos-add-btn new">+ Objetivo</button>
+        </div>
+      </div>
+
+      <!-- SUELDO MENSUAL / INGRESO FIJO -->
+      <div class="tarjeta tarjeta-cuenta glass">
+        <div class="icon-circle" style="background:#eaf1fb"><span>💼</span></div>
+        <div>
+          <h2>Ingreso Fijo</h2>
+          <form id="fijo-form" class="ingreso-fijo-form" style="margin-bottom:12px;">
+            <input type="number" id="fijo-input" placeholder="Sueldo mensual" />
+            <button type="submit" title="Guardar ingreso fijo" class="icon-btn-linda">💾</button>
+          </form>
+          <div class="cuenta-item">
+            <span class="cuenta-nombre">Actual:</span>
+            <span id="cuenta-fijo">$0</span>
           </div>
-          <small id="texto-progreso-total"></small>
+        </div>
+      </div>
+
+      <!-- INGRESOS EXTRA -->
+      <div class="tarjeta tarjeta-ingresos glass">
+        <div class="icon-circle" style="background:#eaf1fb"><span>💰</span></div>
+        <div>
+          <h2>Ingresos Extra</h2>
+          <form id="extra-form" class="card-form" style="margin-bottom:12px;">
+            <input type="number" id="extra-input" placeholder="Monto" required>
+            <select id="extra-cat" required>
+              <option value="" disabled selected>Seleccioná una categoría</option>
+              <option value="Ventas">Ventas</option>
+              <option value="Freelance">Freelance</option>
+              <option value="Regalo">Regalo</option>
+              <option value="Otro">Otro</option>
+            </select>
+            <input type="text" id="extra-desc" placeholder="Descripción" required />
+            <button type="submit">Agregar ingreso</button>
+          </form>
+          <div class="cuenta-item">
+            <span class="cuenta-nombre">Total mes:</span>
+            <span id="cuenta-extra">$0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AHORROS -->
+      <div class="tarjeta tarjeta-ahorro glass">
+        <div class="icon-circle" style="background:#f7eaff"><span>🏦</span></div>
+        <div>
+          <h2>Ahorros</h2>
+          <div class="cuenta-item">
+            <span class="cuenta-nombre">Acumulado:</span>
+            <span id="cuenta-ahorro">$0</span>
+          </div>
+          <ul id="ahorro-list"></ul>
+        </div>
+      </div>
+      <!-- LOGROS -->
+      <div class="tarjeta tarjeta-logros glass">
+        <div class="icon-circle" style="background:#fff3c0"><span>🏅</span></div>
+        <div>
+          <h2>Logros</h2>
+          <ul id="logros-list"></ul>
+        </div>
+      </div>
+      <!-- SIMULADOR DE AHORRO -->
+      <div class="tarjeta tarjeta-simulador glass">
+        <div class="icon-circle" style="background:#f7eaff"><span>🔮</span></div>
+        <div>
+          <h2>Simulador de Ahorro</h2>
+          <input id="sim-objetivo" type="number" placeholder="Objetivo ($)">
+          <input id="sim-ahorro" type="number" placeholder="Ahorro mensual ($)">
+          <button id="sim-calcular">Calcular</button>
+          <div id="sim-resultado"></div>
+        </div>
+      </div>
+      <!-- IMPORTADOR CSV -->
+      <div class="tarjeta tarjeta-import glass">
+        <div class="icon-circle" style="background:#eafff5"><span>⬆️</span></div>
+        <div>
+          <h2>Importar CSV</h2>
+          <input type="file" id="import-csv" accept=".csv">
+          <div id="import-status"></div>
         </div>
       </div>
     </div>
-    <!-- CENTRO: FLASH + GRAFICO -->
-    <div class="bloque-centro">
-      <div class="flashcard-box glass-card">
-        <div id="flashcard">Ahorrá primero, gastá después.</div>
+    <!-- COL 2: GRAFICOS Y GASTOS -->
+    <div class="finzn-col finzn-col-central">
+      <div class="tarjeta tarjeta-grafico glass">
+        <canvas id="graficoGastosCategoria" width="270" height="270"></canvas>
       </div>
-      <div class="grafico-torta-wrapper glass-card">
-        <canvas id="graficoGastosCategoria" width="220" height="220"></canvas>
+      <div class="tarjeta tarjeta-grafico-barras glass">
+        <canvas id="graficoBarrasMes" width="300" height="170"></canvas>
+      </div>
+      <div class="tarjeta tarjeta-grafico-saldo glass">
+        <canvas id="graficoSaldoMes" width="300" height="170"></canvas>
+      </div>
+      <div class="tarjeta resumen-semanal glass">
+        <h3>Resumen semanal</h3>
+        <ul>
+          <li>Total gastado: <span id="total-semana">$0</span></li>
+          <li>Día de mayor gasto: <span id="dia-top"></span></li>
+        </ul>
+      </div>
+      <div class="tarjeta comparador-mensual glass">
+        <h3>Comparador mensual</h3>
+        <div id="comparador-texto"></div>
+      </div>
+      <div class="tarjeta tarjeta-buscador glass">
+        <input id="buscador-gastos" placeholder="🔎 Buscar gasto..." />
+      </div>
+      <div class="tarjeta tarjeta-gastos glass">
+        <div class="gastos-header">
+          <span class="icon-circle" style="background:#eaf1fb"><span>🧾</span></span>
+          <h2>Gastos recientes</h2>
+        </div>
+        <ul id="expense-list" class="lista-gastos"></ul>
       </div>
     </div>
-    <!-- BLOQUE DERECHA -->
-    <div class="titulo-izquierda">
-     <div class="finzn-titulo-principal">FINZN</div>
-      <div class="saldo-box glass-card">
-        <button id="abrir-popup" class="btn-popup">+ Agregar nuevo gasto</button>
+    <!-- COL 3: ACCIONES Y MASCOTA -->
+    <div class="finzn-col finzn-col-acciones">
+      <div class="tarjeta tarjeta-saldo glass">
         <h2>Dinero disponible</h2>
-        <span id="balance-neto">0</span>
-        <p id="gastos-totales">
-          Gastos del mes: <span id="gasto-total-mes">0.00</span>
-        </p>
-        <p id="cuotas-activos-texto">
-          Cuotas este mes: <span id="cuotas-mes">0</span>
-        </p>
+        <div id="balance-neto" class="saldo-principal">$0</div>
+        <div class="resumen">
+          <div>Gastos del mes: <span id="gasto-total-mes">$0</span></div>
+          <div>Cuotas este mes: <span id="cuotas-mes">0</span></div>
+        </div>
+        <button id="abrir-popup" class="btn-popup new">+ Nuevo gasto</button>
       </div>
-      <div class="informe-wrapper">
-        <button id="btn-informe">Generar Informe</button>
+      <div class="tarjeta tarjeta-informe glass">
+        <button id="btn-informe" class="btn-informe new">Generar Informe</button>
+        <button id="exportar-csv" class="btn-informe new">Exportar CSV</button>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- CONTENIDO PRINCIPAL -->
-<div class="container">
-  <div class="secciones-central">
-    <!-- INGRESOS EXTRA -->
-    <div class="card-glass card-ingresos">
-      <div class="card-header">
-        <span class="card-ico">💰</span>
-        <h2>Ingresos Extra</h2>
+      <!-- PERSONALIZAR CATEGORIAS -->
+      <div class="tarjeta tarjeta-categorias glass">
+        <h2>Mis categorías</h2>
+        <ul id="lista-categorias"></ul>
+        <input id="nueva-cat-nombre" placeholder="Nombre nueva categoría"/>
+        <input id="nueva-cat-icono" maxlength="2" placeholder="Emoji"/>
+        <input type="color" id="nueva-cat-color" value="#7e61e7"/>
+        <button id="agregar-categoria">Agregar</button>
       </div>
-      <form id="extra-form" class="card-form">
-        <input type="number" id="extra-input" placeholder="Monto" required>
-        <select id="extra-cat" required>
-          <option value="" disabled selected>Seleccioná una categoría</option>
-          <option value="Ventas">Ventas</option>
-          <option value="Freelance">Freelance</option>
-          <option value="Regalo">Regalo</option>
-          <option value="Otro">Otro</option>
-        </select>
-        <input type="text" id="extra-desc" placeholder="Descripción" required />
-        <button type="submit">Agregar ingreso</button>
-      </form>
-      <div class="ingreso-extra-resumen">
-        Total este mes: <span id="ingresos-extra-total">$0</span>
-      </div>
-      <ul id="extra-ingresos-list"></ul>
-    </div>
-
-    <!-- GASTOS -->
-    <div class="card-glass card-gastos">
-      <div class="card-header">
-        <span class="card-ico">🧾</span>
-        <h2>Lista de Gastos</h2>
-
-      </div>
-      <ul id="expense-list"></ul>
-    </div>
-
-    <!-- CUOTAS -->
-    <div class="card-glass card-cuotas">
-      <div class="card-header">
-        <span class="card-ico">⏳</span>
-        <h2>Cuotas Activas</h2>
-      </div>
-      <ul id="cuotas-activas-list"></ul>
-    </div>
-
-    <!-- AHORROS -->
-    <div class="card-glass card-ahorros">
-      <div class="card-header">
-        <span class="card-ico">🏦</span>
-        <h2>Ahorros Acumulados</h2>
-      </div>
-      <ul id="ahorro-list"></ul>
-      <div class="ahorro-total-container">
-        Total acumulado: $<span id="ahorro-total">0</span>
+      <!-- MODO OSCURO -->
+      <!-- MASCOTA CHAT -->
+      <div id="mascota-chat">
+        <img src="mascota.png" alt="Mascota IA" id="mascota-icono" />
+        <div id="chat-burbuja" class="oculto">
+          <div id="chat-mensajes"></div>
+          <input type="text" id="chat-input" placeholder="Escribí tu duda..." />
+          <button id="enviar-mensaje">Enviar</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- POPUPS -->
-<div id="popup-gasto" class="popup-overlay">
-  <div class="popup">
-    <h2>Nuevo Gasto</h2>
-    <input type="text" id="popup-desc" placeholder="Descripción del gasto" required>
-    <input type="number" id="popup-monto" placeholder="Monto" required>
-    <input type="number" id="popup-cuotas" placeholder="Cuotas (opcional)" min="1" />
-    <button id="popup-agregar">Agregar</button>
-    <button id="cerrar-popup" class="btn-cerrar">Cancelar</button>
+  
+  <!-- POPUPS -->
+  <div id="popup-gasto" class="popup-overlay">
+    <div class="popup">
+      <h2>Nuevo Gasto</h2>
+      <input type="text" id="popup-desc" placeholder="Descripción del gasto" required>
+      <input type="number" id="popup-monto" placeholder="Monto" required>
+      <input type="number" id="popup-cuotas" placeholder="Cuotas (opcional)" min="1" />
+      <label style="margin:7px 0 0 0;display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="gasto-recurrente" />
+        Gasto recurrente (se repetirá cada mes)
+      </label>
+      <button id="popup-agregar">Agregar</button>
+      <button id="cerrar-popup" class="btn-cerrar">Cancelar</button>
+    </div>
   </div>
-</div>
-<div id="popup-informe" class="popup-overlay">
-  <div class="popup">
-    <h2>Informe de Gastos</h2>
-    <div id="informe-contenedor"></div>
-    <button id="cerrar-informe" class="btn-cerrar">Cerrar</button>
+  <div id="popup-informe" class="popup-overlay">
+    <div class="popup">
+      <h2>Informe de Gastos</h2>
+      <div id="informe-contenedor"></div>
+      <button id="cerrar-informe" class="btn-cerrar">Cerrar</button>
+    </div>
   </div>
-</div>
-<div id="popup-overlay-objetivos" class="popup-overlay">
-  <div class="popup" id="popup-objetivos">
-    <h2>🎯 Nuevo objetivo de ahorro</h2>
-    <input type="text" id="nombre" placeholder="Ej: Viaje">
-    <input type="number" id="montoObjetivo" placeholder="Objetivo: $">
-    <input type="number" id="montoAcumulado" placeholder="Ahorrado: $">
-    <button id="agregar-objetivo-btn">Agregar</button>
-    <button id="cerrar-popup-objetivos" style="margin-top:16px;">Cerrar</button>
+  <div id="popup-overlay-objetivos" class="popup-overlay">
+    <div class="popup" id="popup-objetivos">
+      <h2>🎯 Nuevo objetivo de ahorro</h2>
+      <input type="text" id="nombre" placeholder="Ej: Viaje">
+      <input type="number" id="montoObjetivo" placeholder="Objetivo: $">
+      <input type="number" id="montoAcumulado" placeholder="Ahorrado: $">
+      <button id="agregar-objetivo-btn">Agregar</button>
+      <button id="cerrar-popup-objetivos" style="margin-top:16px;">Cerrar</button>
+    </div>
   </div>
-</div>
-
-<!-- MASCOTA CHAT -->
-<div id="mascota-chat">
-  <img src="mascota.png" alt="Mascota IA" id="mascota-icono" />
-  <div id="chat-burbuja" class="oculto">
-    <div id="chat-mensajes"></div>
-    <input type="text" id="chat-input" placeholder="Escribí tu duda..." />
-    <button id="enviar-mensaje">Enviar</button>
-  </div>
-</div>
-
-<!-- Scripts -->
-<script src="app.js"></script>
+  
+  <!-- SCRIPTS -->
+  <script src="app.js"></script>
 </body>
 </html>
