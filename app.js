@@ -1,7 +1,26 @@
 // ==============================
 // VARS, LOCALSTORAGE & INIT
 // ==============================
-
+// Palabras clave para reconocimiento automático de categoría
+const clavesCategorias = {
+  "starbucks": "Comida",
+  "mcdonalds": "Comida",
+  "burger king": "Comida",
+  "farmacity": "Salud",
+  "farmacia": "Salud",
+  "ypf": "Transporte",
+  "shell": "Transporte",
+  "sube": "Transporte",
+  "cine": "Ocio",
+  "spotify": "Ocio",
+  "jumbo": "Supermercado",
+  "carrefour": "Supermercado",
+  "galicia": "Finanzas",
+  "personal": "Servicios",
+  "movistar": "Servicios",
+  "open sports": "Ocio",
+  "sanatorio": "Salud"
+};
 let gastosPorMes = {};
 let ingresosFijos = {};
 let ingresosExtras = {};
@@ -461,12 +480,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ========== CATEGORÍA AUTOMÁTICA ==========
   function obtenerCategoriaAutomatica(descripcion) {
-    const desc = descripcion.toLowerCase();
-    for (const cat of misCategorias) {
-      if (desc.includes(cat.nombre.toLowerCase())) return cat.nombre;
+  const desc = descripcion.toLowerCase();
+  // Busca en el diccionario de palabras clave
+  for (const clave in clavesCategorias) {
+    if (desc.includes(clave)) {
+      // Si la categoría existe en las personalizadas, devuélvela
+      if (misCategorias.some(cat => cat.nombre === clavesCategorias[clave])) {
+        return clavesCategorias[clave];
+      }
+      break;
     }
-    return "Otros";
   }
+  // Si no encontró, intenta por coincidencia con alguna de tus categorías personalizadas
+  for (const cat of misCategorias) {
+    if (desc.includes(cat.nombre.toLowerCase())) {
+      return cat.nombre;
+    }
+  }
+  // Si no encontró, usa "Otros"
+  return "Otros";
+}
+
 
   // ========== OBJETIVOS ==========
 
